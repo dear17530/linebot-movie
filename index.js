@@ -86,7 +86,7 @@ for (let i = 0; i < $('.part .title').length; i++) {
 // 快速回覆影城選項
 const quickRepierCinema = {
   type: 'text',
-  text: '我們合作的影城如下，請點選您要查詢的影院。',
+  text: `我們合作的影城如下，手機版請點選您要查詢的影院，電腦版請則一輸入以下影院:\n威秀影城\n新光影城\nin89豪華數位影城\n美麗華影城\n華威影城\n喜樂時代影城\n喜滿客影城\n真善美戲院\n其他影城。`,
   quickReply: {
     items: []
   }
