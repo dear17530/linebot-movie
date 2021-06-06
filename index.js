@@ -99,7 +99,7 @@ $('.part .title').each(function () {
   ) {
     quickRepierCinema.quickReply.items.push({
       type: 'action',
-      imageUrl: 'https://github.com/dear17530/linebot/blob/main/trumpet.png?raw=true',
+      imageUrl: 'https://github.com/dear17530/linebot-movie/blob/main/location.png?raw=true',
       action: {
         type: 'message',
         label:
@@ -117,7 +117,7 @@ $('.part .title').each(function () {
   } else {
     quickRepierCinema.quickReply.items.push({
       type: 'action',
-      imageUrl: 'https://github.com/dear17530/linebot/blob/main/trumpet.png?raw=true',
+      imageUrl: 'https://github.com/dear17530/linebot-movie/blob/main/location.png?raw=true',
       action: {
         type: 'message',
         label: $(this)
