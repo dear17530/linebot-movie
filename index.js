@@ -458,6 +458,7 @@ bot.on('message', async event => {
           return s.date === seconds
         }
         dataSeats = data.find(isseconds)
+        console.log(dataSeats)
         let messageMovieTimeSeats = ''
         messageMovieTimeSeats += '以下為電影剩餘座位資訊:\n'
         for (const s of dataSeats.sdata) {
