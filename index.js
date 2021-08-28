@@ -312,6 +312,8 @@ bot.on('message', async event => {
         inquireMovieName = event.message.text
         movieIdIndex = movieName.indexOf(inquireMovieName)
         inquireMovieId = movieId[movieIdIndex]
+        console.log(movieIdIndex)
+        console.log(inquireMovieId)
         const buttons_template = {
           type: 'template',
           altText: `查詢${event.message.text}`,
@@ -358,7 +360,6 @@ bot.on('message', async event => {
         quickRepierDate = []
         movieIdIndex = movieName.indexOf(inquireMovieName)
         inquireMovieId = `${movieId[movieIdIndex]}`
-        console.log(inquireMovieId)
         response = await axios.get(`https://www.ezding.com.tw/new_ezding/orders/find_movie/${inquireMovieId}`, {
           headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
@@ -416,6 +417,7 @@ bot.on('message', async event => {
         for (const day of data) {
           datemmdd.push(new Date(day.date).getMonth() + 1 + '/' + new Date(day.date).getDate())
         }
+        console.log(datemmdd)
         quickRepierDate = {
           type: 'text',
           text: '你想查詢哪一天?',
