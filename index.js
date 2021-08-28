@@ -2,6 +2,7 @@ import linebot from 'linebot'
 import dotenv from 'dotenv'
 import axios from 'axios'
 import cheerio from 'cheerio'
+import schedule from 'node-schedule'
 
 // 讓套件讀取 .env 檔案
 // 讀取後可以用 process.env.變數 使用
@@ -44,10 +45,121 @@ bot.listen('/', process.env.PORT, () => {
   console.log('機器人啟動')
 })
 
+let messageCinema = ''
+
+const getData = () => {
+  axios
+    .get('https://www.ezding.com.tw')
+    .then(response => {})
+    .catch()
+}
+// 每天 0 點更新資料
+schedule.scheduleJob('0 0 0 * *', getData)
+// 機器人啟動時也要有資料
+getData()
+
 bot.on('message', async event => {
   const main = async () => {
     try {
-      let response = await axios.get('https://www.ezding.com.tw/new_ezding/ranking_list/order_top?page=1&page_size=200', {
+      // 抓影城資料
+      let response = await axios.get('https://www.ezding.com.tw/')
+      const $ = cheerio.load(response.data)
+      const cinemaData = []
+      let sum = 0
+      for (let i = 0; i < $('.part .title').length; i++) {
+        if (i === 0) {
+          for (let j = 0; j < $('.cinemalist').eq(i).find('li').length; j++) {
+            cinemaData.push({
+              cinema: $('.part .title').eq(i).text(),
+              name: $('.cinemalist .cinema').eq(j).text(),
+              location: $('.cinemalist .cinema').eq(j).attr('cinemaid')
+            })
+          }
+        } else {
+          sum += $('.cinemalist')
+            .eq(`${i - 1}`)
+            .find('li').length
+          for (let j = sum; j < sum + $('.cinemalist').eq(i).find('li').length; j++) {
+            cinemaData.push({
+              cinema: $('.part .title').eq(i).text(),
+              name: $('.cinemalist .cinema').eq(j).text(),
+              location: $('.cinemalist .cinema').eq(j).attr('cinemaid')
+            })
+          }
+        }
+      }
+
+      // 快速回覆影城選項
+      const quickRepierCinema = {
+        type: 'text',
+        text: `我們合作的影城如下:\n威秀影城\n新光影城\nin89豪華數位影城\n美麗華影城\n華威影城\n喜樂時代影城\n喜滿客影城\n真善美戲院\n其他影城\n手機版請點選您要查詢的影院，\n電腦版請手動輸入影院名稱。`,
+        quickReply: {
+          items: []
+        }
+      }
+      $('.part .title').each(function () {
+        if (
+          $(this)
+            .text()
+            .replace(/[^\u4E00-\u9FA5]/g, '') === '豪華數位影城'
+        ) {
+          quickRepierCinema.quickReply.items.push({
+            type: 'action',
+            imageUrl: 'https://github.com/dear17530/linebot-movie/blob/main/location.png?raw=true',
+            action: {
+              type: 'message',
+              label:
+                'in89' +
+                $(this)
+                  .text()
+                  .replace(/[^\u4E00-\u9FA5]/g, ''),
+              text:
+                'in89' +
+                $(this)
+                  .text()
+                  .replace(/[^\u4E00-\u9FA5]/g, '')
+            }
+          })
+        } else {
+          quickRepierCinema.quickReply.items.push({
+            type: 'action',
+            imageUrl: 'https://github.com/dear17530/linebot-movie/blob/main/location.png?raw=true',
+            action: {
+              type: 'message',
+              label: $(this)
+                .text()
+                .replace(/[^\u4E00-\u9FA5]/g, ''),
+              text: $(this)
+                .text()
+                .replace(/[^\u4E00-\u9FA5]/g, '')
+            }
+          })
+        }
+      })
+
+      if (event.message.text === '影城資訊') {
+        event.reply(quickRepierCinema)
+      }
+      // 使用者選擇影城，機器人回覆電影院
+      for (const c of cinemaData) {
+        if (c.cinema.includes(event.message.text)) {
+          console.log(c.location)
+          response = await axios.get(`https://www.ezding.com.tw/new_ezding/cinemas/${c.location}`, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
+              'accept-encoding': 'gzip,deflate'
+            },
+            responseType: 'json'
+          })
+          messageCinema += `${response.data.result.cinema_name.zh_tw}\n`
+          messageCinema += `地址:${response.data.result.address}\n`
+          messageCinema += `電話:${response.data.result.phone}\n\n`
+        }
+      }
+      event.reply(messageCinema)
+      messageCinema = ''
+
+      response = await axios.get('https://www.ezding.com.tw/new_ezding/ranking_list/order_top?page=1&page_size=200', {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
           'accept-encoding': 'gzip,deflate'
