@@ -2,7 +2,6 @@
 - 好友名稱 @442ztgyd
 - 機器人介紹:可查詢電影介紹、場次剩餘座位、熱門電影推薦。
 - 串接資料：
-  **因疫情關係只有第一項仍串的到資料，第二項至第四項都因影城暫時關閉串不到資料，目前機器人僅提供城城資訊查詢。**
 1. 影城資訊串接資料：https://www.ezding.com.tw/
 2. 電影推薦串接資料：https://www.ezding.com.tw/new_ezding/ranking_list/order_top?page=1&page_size=200
 3. 電影介紹串接資料：https://www.ezding.com.tw/new_ezding/movies/${inquireMovieId}
