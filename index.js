@@ -419,7 +419,6 @@ bot.on('message', async event => {
         for (const day of data) {
           datemmdd.push(new Date(day.date).getMonth() + 1 + '/' + new Date(day.date).getDate())
         }
-        console.log(datemmdd)
         quickRepierDate = {
           type: 'text',
           text: '你想查詢哪一天?',
@@ -444,13 +443,13 @@ bot.on('message', async event => {
 
       // 使用者回覆日期，機器人回覆影城、時間、剩餘座位
       if (datemmdd.includes(event.message.text)) {
-        // response = await axios.get(
-        //   `https://www.ezding.com.tw/new_ezding/orders/find_location_cinema?movie_id=${inquireMovieId}&location=${inquireLocationNum}&page=1&page_size=10`
-        // )
-        // data = response.data.result.list
-        response = await axios.get(`https://www.ezding.com.tw/locationbooking?movieid=${inquireMovieId}&location=${inquireLocationNum}`)
-        const $ = cheerio.load(response.data)
-        data = JSON.parse($('#__NEXT_DATA__').html()).props.pageProps.movieInfo.result.list
+        response = await axios.get(
+          `https://www.ezding.com.tw/new_ezding/orders/find_location_cinema?movie_id=${inquireMovieId}&location=${inquireLocationNum}&page=1&page_size=10`
+        )
+        data = response.data.result.list
+        // response = await axios.get(`https://www.ezding.com.tw/locationbooking?movieid=${inquireMovieId}&location=${inquireLocationNum}`)
+        // const $ = cheerio.load(response.data)
+        // data = JSON.parse($('#__NEXT_DATA__').html()).props.pageProps.movieInfo.result.list
         if (data.length < 1) {
           return event.reply('抱歉，目前區域查無電影或資料系統忙碌中，請查詢其他區域或其他電影。')
         }
