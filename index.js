@@ -454,6 +454,7 @@ bot.on('message', async event => {
           return event.reply('抱歉，目前區域查無電影或資料系統忙碌中，請查詢其他區域或其他電影。')
         }
         seconds = parseInt(new Date('2021/' + event.message.text + ' ' + '00:00:00').getTime())
+        console.log(seconds)
         function isseconds(s) {
           return s.date === seconds
         }
