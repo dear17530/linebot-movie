@@ -13,13 +13,6 @@ const bot = linebot({
   channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN
 })
 
-// const wait = (delay) => {
-//   return new Promise((reslove, reject) => {
-//     setTimeout(() => {
-//       reslove(`過了${delay}毫秒`)
-//     }, delay)
-//   })
-// }
 const movieName = []
 const movieId = []
 let inquireMovieId = ''
