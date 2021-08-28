@@ -411,9 +411,13 @@ bot.on('message', async event => {
           return s.city === event.message.text
         }
         inquireLocationNum = movieLocationData.find(isLocationCity).num
-        response = await axios.get(`https://www.ezding.com.tw/locationbooking?movieid=${inquireMovieId}&location=${inquireLocationNum}`)
-        const $ = cheerio.load(response.data)
-        data = JSON.parse($('#__NEXT_DATA__').html()).props.pageProps.movieInfo.result.list
+        response = await axios.get(
+          `https://www.ezding.com.tw/new_ezding/orders/find_location_cinema?movie_id=${inquireMovieId}&location=${inquireLocationNum}&page=1&page_size=10`
+        )
+        // response = await axios.get(`https://www.ezding.com.tw/locationbooking?movieid=${inquireMovieId}&location=${inquireLocationNum}`)
+        // const $ = cheerio.load(response.data)
+        // data = JSON.parse($('#__NEXT_DATA__').html()).props.pageProps.movieInfo.result.list
+        data = response.data.result.list
         for (const day of data) {
           datemmdd.push(new Date(day.date).getMonth() + 1 + '/' + new Date(day.date).getDate())
         }
