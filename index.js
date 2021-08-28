@@ -22,7 +22,7 @@ let movieLocationNum = []
 let movieLocationCity = []
 let quickRepierCity = []
 let quickRepierDate = []
-const datemmdd = []
+let datemmdd = []
 let movieIdIndex = -1
 const movieLocationData = [
   { city: '台北', num: 1 },
@@ -407,6 +407,7 @@ bot.on('message', async event => {
 
       // 使用者回覆城市名，機器人詢問日期
       if (movieLocationCity.includes(event.message.text)) {
+        datemmdd = []
         function isLocationCity(s) {
           return s.city === event.message.text
         }
@@ -414,9 +415,6 @@ bot.on('message', async event => {
         response = await axios.get(
           `https://www.ezding.com.tw/new_ezding/orders/find_location_cinema?movie_id=${inquireMovieId}&location=${inquireLocationNum}&page=1&page_size=10`
         )
-        // response = await axios.get(`https://www.ezding.com.tw/locationbooking?movieid=${inquireMovieId}&location=${inquireLocationNum}`)
-        // const $ = cheerio.load(response.data)
-        // data = JSON.parse($('#__NEXT_DATA__').html()).props.pageProps.movieInfo.result.list
         data = response.data.result.list
         for (const day of data) {
           datemmdd.push(new Date(day.date).getMonth() + 1 + '/' + new Date(day.date).getDate())
@@ -446,6 +444,10 @@ bot.on('message', async event => {
 
       // 使用者回覆日期，機器人回覆影城、時間、剩餘座位
       if (datemmdd.includes(event.message.text)) {
+        // response = await axios.get(
+        //   `https://www.ezding.com.tw/new_ezding/orders/find_location_cinema?movie_id=${inquireMovieId}&location=${inquireLocationNum}&page=1&page_size=10`
+        // )
+        // data = response.data.result.list
         response = await axios.get(`https://www.ezding.com.tw/locationbooking?movieid=${inquireMovieId}&location=${inquireLocationNum}`)
         const $ = cheerio.load(response.data)
         data = JSON.parse($('#__NEXT_DATA__').html()).props.pageProps.movieInfo.result.list
